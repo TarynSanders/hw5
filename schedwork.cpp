@@ -24,47 +24,65 @@ static const Worker_T INVALID_ID = (unsigned int)-1;
 bool placement(const AvailabilityMatrix &avail, int &x, int &y, DailySchedule &sched);
 bool confirmFree(size_t dailyNeed, size_t x, size_t maxShifts, size_t section, DailySchedule &sched, const AvailabilityMatrix &availd);
 bool help(int size, const AvailabilityMatrix &avail, int maxShifts, DailySchedule &sched);
+bool recursiveSchedule(const AvailabilityMatrix& avail, const size_t dailyNeed, const size_t maxShifts, DailySchedule& sched, long int check);
 
 // Add your implementation of schedule() and other helper functions here
 
-bool schedule(
-    const AvailabilityMatrix& avail,
-    const size_t dailyNeed,
-    const size_t maxShifts,
-    DailySchedule& sched
-)
+bool schedule(const AvailabilityMatrix& avail, const size_t dailyNeed, const size_t maxShifts, DailySchedule& sched)
 {
     if(avail.size() == 0U){
         return false;
     }
     sched.clear();
     // Add your code below
-
     long int check = 0;
-    vector<Worker_T> schedule;
-    while (check < avail.size())
-    {
-      sched.push_back(schedule);
-      long int count = 0;
-      while (count < dailyNeed)
-      {
-        sched[check].push_back(-1);
-        ++count;
-      }
-      ++check;
-    }
+    return recursiveSchedule(avail, dailyNeed, maxShifts, sched, check);
+    // long int check = 0;
+    // vector<Worker_T> schedule;
+    // while (check < avail.size())
+    // {
+    //   sched.push_back(schedule);
+    //   long int count = 0;
+    //   while (count < dailyNeed)
+    //   {
+    //     sched[check].push_back(-1);
+    //     ++count;
+    //   }
+    //   ++check;
+    // }
 
-    while (true)
-    {
-      int x = 5;
-      for (long i = 0; i < 5; i++)
-      {
-        check--;
-      }
-      break;
-    }
+    // while (true)
+    // {
+    //   int x = 5;
+    //   for (long i = 0; i < 5; i++)
+    //   {
+    //     check--;
+    //   }
+    //   break;
+    // }
 
-    return help(check, avail, maxShifts, sched);
+    // return help(check, avail, maxShifts, sched);
+}
+
+bool recursiveSchedule(const AvailabilityMatrix& avail, const size_t dailyNeed, const size_t maxShifts, DailySchedule& sched, long int check)
+{
+    if(check >= avail.size())
+    {
+        return help(check, avail, maxShifts, sched);
+    }
+    else
+    {
+        vector<Worker_T> schedule;
+        sched.push_back(schedule);
+        long int count = 0;
+        while (count < dailyNeed)
+        {
+            sched[check].push_back(-1);
+            ++count;
+        }
+        ++check;
+        return recursiveSchedule(avail, dailyNeed, maxShifts, sched, check);
+    }
 }
 
 bool help(int size, const AvailabilityMatrix &avail, int maxShifts, DailySchedule &sched)
